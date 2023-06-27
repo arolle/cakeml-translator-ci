@@ -1,0 +1,23 @@
+# this repo's artefacts
+revProg
+revProg.sexp
+
+# Nix artifacts
+result
+
+# HOL4
+.HOLMK
+.hollogs
+.holobjs
+*Theory.dat
+*Theory.sig
+*Theory.sml
+*Theory.ui
+*Theory.uo
+
+# Emacs backup files
+*~
+
+# Vim swap files
+*.swp
+

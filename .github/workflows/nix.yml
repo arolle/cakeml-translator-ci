@@ -1,0 +1,48 @@
+name: Nix CI
+on:
+  pull_request_target:
+    types:
+      - opened
+      - reopened
+      - synchronize
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - 'docs/**'
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  nix-wholecake:
+    name: Build and release with nix and caching
+    runs-on: ubuntu-latest
+    env:
+      ARTEFACT: revProg.sexp
+      REPO: "arolle/test"
+      OUT: ${{ github.workspace }}
+    # timeout-minutes: 360
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install Nix
+      uses: DeterminateSystems/nix-installer-action@v4
+    - name: Run the Magic Nix Cache
+      uses: DeterminateSystems/magic-nix-cache-action@v1
+    - name: Fetch CakeML Compiler
+      run: nix build '.#cakemlbin' --log-lines 30 -v
+    - name: Build HOL
+      run: nix build '.#hol4' --log-lines 30 -v
+    - name: Build CakeML
+      run: nix build '.#cakeml' --log-lines 100 -v
+    - name: Build local files
+      run: nix build --log-lines 30 -v
+    - name: Release artefact
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        nix shell 'nixpkgs#gh' --command \
+          gh release create "v$(date "+%Y.%m.%d")" \
+            --notes "$(nix flake metadata|sed $'s/\033\[[0-9;]*m//g')" \
+            --latest --repo ${{ env.REPO }} "${{ env.ARTEFACT }}"
+
