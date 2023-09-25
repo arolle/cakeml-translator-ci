@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       ARTEFACT: revProg.sexp
-      REPO: "arolle/test"
+      REPO: "arolle/cakeml-translator-ci"
       OUT: ${{ github.workspace }}
     # timeout-minutes: 360
     steps:
