@@ -10,6 +10,7 @@ on:
       - main
     paths-ignore:
       - 'docs/**'
+      - '**.md'
   pull_request:
     branches:
       - main
@@ -23,6 +24,9 @@ jobs:
       REPO: "arolle/cakeml-translator-ci"
       OUT: ${{ github.workspace }}
     # timeout-minutes: 360
+    # permissions for release
+    permissions:
+      contents: write
     steps:
     - uses: actions/checkout@v3
     - name: Install Nix
