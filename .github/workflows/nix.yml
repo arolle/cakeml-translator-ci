@@ -44,5 +44,6 @@ jobs:
         nix shell 'nixpkgs#gh' --command \
           gh release create "v$(date "+%Y.%m.%d")" \
             --notes "$(nix flake metadata|sed $'s/\033\[[0-9;]*m//g')" \
-            --latest --repo ${{ env.REPO }} "${{ env.ARTEFACT }}"
+            --latest --repo ${{ env.REPO }} \
+            "$(nix eval --raw '.#default.outPath')/${{ env.ARTEFACT }}"
 
